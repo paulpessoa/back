@@ -27,3 +27,11 @@ export async function getPostById(id) {
     throw error;
   }
 }
+
+export async function createPost(newPost) {
+  const db = connection.db("qi-bytes");
+  const collection = db.collection("posts");
+  return collection.insertOne(newPost);
+  // const post = await db.collection("posts").insertOne(newPost);
+  // return post.ops[0];
+}

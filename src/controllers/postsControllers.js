@@ -1,4 +1,4 @@
-import { getAllPosts, getPostById } from "../models/postsModels.js";
+import { getAllPosts, getPostById, createPost } from "../models/postsModels.js";
 
 export async function postsListController(req, res) {
   const posts = await getAllPosts();
@@ -20,5 +20,16 @@ export async function getPostByIdController(req, res) {
       return res.status(400).json({ message: "ID inválido" });
     }
     res.status(500).json({ message: error.message });
+  }
+}
+
+export async function createPostController(req, res) {
+  const newPost = req.body;
+  try {
+    const postCreated = await createPost(newPost);
+    res.status(201).json(postCreated);
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ message: error.message });
   }
 }
