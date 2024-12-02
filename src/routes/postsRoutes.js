@@ -9,9 +9,20 @@ import {
 } from "../controllers/postsControllers.js";
 import cors from "cors";
 
+const allowedOrigins = [
+  "http://localhost:8000", // Ambiente local
+  "https://insta-bytes.vercel.app/", // Substitua pelo link da Vercel
+];
+
 const corsOptions = {
-  origin: "http://localhost:8000",
-  optionsSuccessStatus: 200,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // Permitir a requisição
+    } else {
+      callback(new Error("Not allowed by CORS")); // Bloquear requisição
+    }
+  },
+  optionsSuccessStatus: 200, // Para suporte em navegadores antigos
 };
 
 const storage = multer.diskStorage({
