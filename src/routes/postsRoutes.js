@@ -5,8 +5,14 @@ import {
   getPostByIdController,
   createPostController,
   uploadImageController,
-  updatePostController
+  updatePostController,
 } from "../controllers/postsControllers.js";
+import cors from "cors";
+
+const corsOptions = {
+  origin: "http://localhost:8000",
+  optionsSuccessStatus: 200,
+};
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -21,6 +27,7 @@ const upload = multer({ storage: storage });
 
 const routes = (app) => {
   app.use(express.json());
+  app.use(cors(corsOptions));
   app.get("/api/posts", postsListController);
   app.get("/api/posts/:id", getPostByIdController); // Nova rota com parâmetro id
   app.post("/api/posts", createPostController); // Nova rota para criar um post
