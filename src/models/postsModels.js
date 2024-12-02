@@ -1,3 +1,4 @@
+import "dotenv/config.js"; // Importa o dotenv para acessar variáveis de ambiente
 import connectDB from "../config/dbConfig.js";
 import { ObjectId } from "mongodb"; // Importe ObjectId
 
