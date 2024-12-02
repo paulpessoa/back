@@ -5,6 +5,7 @@ import {
   getPostByIdController,
   createPostController,
   uploadImageController,
+  updatePostController
 } from "../controllers/postsControllers.js";
 
 const storage = multer.diskStorage({
@@ -24,6 +25,7 @@ const routes = (app) => {
   app.get("/api/posts/:id", getPostByIdController); // Nova rota com parâmetro id
   app.post("/api/posts", createPostController); // Nova rota para criar um post
   app.post("/api/upload", upload.single("image"), uploadImageController); // Rota para upload de imagem
+  app.put("/api/upload/:id", updatePostController); // Rota para atualizar post
 };
 
 export default routes;

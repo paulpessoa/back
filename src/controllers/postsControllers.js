@@ -1,4 +1,9 @@
-import { getAllPosts, getPostById, createPost } from "../models/postsModels.js";
+import {
+  getAllPosts,
+  getPostById,
+  createPost,
+  updatePost,
+} from "../models/postsModels.js";
 import fs from "fs";
 export async function postsListController(req, res) {
   const posts = await getAllPosts();
@@ -49,8 +54,8 @@ export async function uploadImageController(req, res) {
     };
 
     const postCreated = await createPost(newPost);
-    const renameImage = `uploads/${postCreated.insertedId}.png`
-    fs.renameSync(req.file.path, renameImage)
+    const renameImage = `uploads/${postCreated.insertedId}.png`;
+    fs.renameSync(req.file.path, renameImage);
     res.status(201).json({
       message: "Upload realizado com sucesso",
       post: postCreated,
@@ -58,5 +63,22 @@ export async function uploadImageController(req, res) {
   } catch (error) {
     console.error("Erro no upload:", error);
     res.status(500).json({ error: "Falha no upload" });
+  }
+}
+export async function updatePostController(req, res) {
+  const id = req.params.id;
+  const newImageUrl = `http://localhost:3000/uploads/${id}.png`;
+  try {
+    // Cria um novo post com os dados do arquivo
+    const newPost = {
+      imgUrl: newImageUrl, // Armazena o nome do arquivo
+      description: req.body.description || "",
+      alt: req.body.alt || "",
+    };
+    const postUpdated = await updatePost(id, newPost);
+    res.status(200).json(postUpdated);
+  } catch (error) {
+    console.error("Erro no upload:", error);
+    res.status(500).json({ error: "Falha na atualizacao" });
   }
 }

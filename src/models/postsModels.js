@@ -35,3 +35,13 @@ export async function createPost(newPost) {
   // const post = await db.collection("posts").insertOne(newPost);
   // return post.ops[0];
 }
+
+export async function updatePost(id, updateContent) {
+  const db = connection.db("qi-bytes");
+  const collection = db.collection("posts");
+  const objID = ObjectId.createFromHexString(id);
+  return collection.updateOne(
+    { _id: new ObjectId(objID) },
+    { $set: updateContent }
+  );
+}
