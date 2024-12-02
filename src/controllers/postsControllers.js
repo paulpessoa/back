@@ -5,6 +5,7 @@ import {
   updatePost,
 } from "../models/postsModels.js";
 import fs from "fs";
+import generateDescriptionWithGemini from "../services/geminiService.js";
 export async function postsListController(req, res) {
   const posts = await getAllPosts();
   res.status(200).json(posts);
@@ -69,10 +70,13 @@ export async function updatePostController(req, res) {
   const id = req.params.id;
   const newImageUrl = `http://localhost:3000/uploads/${id}.png`;
   try {
+    const imgBuffer = fs.readFileSync(`uploads/${id}.png`);
+    const description = await generateDescriptionWithGemini(imgBuffer);
+
     // Cria um novo post com os dados do arquivo
     const newPost = {
       imgUrl: newImageUrl, // Armazena o nome do arquivo
-      description: req.body.description || "",
+      description,
       alt: req.body.alt || "",
     };
     const postUpdated = await updatePost(id, newPost);
