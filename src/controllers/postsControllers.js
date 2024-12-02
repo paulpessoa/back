@@ -1,5 +1,5 @@
 import { getAllPosts, getPostById, createPost } from "../models/postsModels.js";
-
+import fs from "fs";
 export async function postsListController(req, res) {
   const posts = await getAllPosts();
   res.status(200).json(posts);
@@ -30,6 +30,33 @@ export async function createPostController(req, res) {
     res.status(201).json(postCreated);
   } catch (error) {
     console.log(error.message);
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ "Erro: ": "Falha na requisição" });
+  }
+}
+
+export async function uploadImageController(req, res) {
+  try {
+    // Verifica se o arquivo foi enviado
+    if (!req.file) {
+      return res.status(400).json({ error: "Nenhum arquivo enviado" });
+    }
+
+    // Cria um novo post com os dados do arquivo
+    const newPost = {
+      description: req.body.description || "",
+      imgUrl: req.file.filename, // Armazena o nome do arquivo
+      alt: req.body.alt || "",
+    };
+
+    const postCreated = await createPost(newPost);
+    const renameImage = `uploads/${postCreated.insertedId}.png`
+    fs.renameSync(req.file.path, renameImage)
+    res.status(201).json({
+      message: "Upload realizado com sucesso",
+      post: postCreated,
+    });
+  } catch (error) {
+    console.error("Erro no upload:", error);
+    res.status(500).json({ error: "Falha no upload" });
   }
 }
