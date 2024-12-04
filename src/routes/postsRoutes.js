@@ -12,6 +12,7 @@ import cors from "cors";
 const allowedOrigins = [
   "http://localhost:8000", // Ambiente local
   "https://insta-bytes.vercel.app", // Substitua pelo link da Vercel
+  "*"
 ];
 
 const corsOptions = {
